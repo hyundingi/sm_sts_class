@@ -20,7 +20,7 @@ public class BoardController {
 	@GetMapping("/bview")
 	public String bview(int bno) {
 		System.out.println(bno);
-		BoardDto BoardDto = boardService.bview(bno);
+//		BoardDto BoardDto = boardService.bview(bno);
 		return "board/bview";
 	}
 	
