@@ -8,12 +8,49 @@
 	
 	<!--  게시글 전체 리스트 -->
   <select id="selectAll" resultType="com.java.dto.BoardDto">
-      select * from board order by bno desc
+      select * from (select row_number() over(order by bgroup desc, bstep asc) rnum,
+       a.* from board a 
+       <if test="category == 'btitle' or category == 'bcontent'">
+       	where ${category} like '%'||#{searchW}||'%'
+       </if>
+       <if test="category == 'all'" >
+       where btitle like '%'||#{searchW}||'%' or bcontent like '%'||#{searchW}||'%' 
+       </if>
+       ) where rnum between #{startrow} and #{endrow}
   </select>
   
-	<!--  게시글 1개(view) 리스트 -->
+  <!-- 하단 넘버링 - 게시글 총갯수 가져오기 -->
+  <select id="countAll" resultType="int">
+  	select count(*) from board
+  	<if test="category == 'btitle' or category == 'bcontent'">
+       	where ${category} like '%'||#{searchW}||'%'
+       </if>
+       <if test="category == 'all'" >
+       where btitle like '%'||#{searchW}||'%' or bcontent like '%'||#{searchW}||'%' 
+       </if>
+  </select>
+  
+	<!--  현재 게시글 1개(view) 가져오기 -->
   <select id="selectOne" resultType="com.java.dto.BoardDto">
 	  select * from board where bno=#{bno}
+  </select>
+  
+	<!--  이전 게시글 1개(view) 가져오기 -->
+  <select id="selectOnePrev" resultType="com.java.dto.BoardDto">
+	  select * from board where bno=
+		(select prev_bno from 
+		(select bno, lead(bno,1,-1) over (order by bgroup desc, bstep asc) as prev_bno from board) 
+		where bno= #{bno}
+		)
+  </select>
+  
+	<!--  다음 게시글 1개(view) 가져오기 -->
+  <select id="selectOneNext" resultType="com.java.dto.BoardDto">
+	  select * from board where bno=
+		(select prev_bno from 
+		(select bno, lag(bno,1,-1) over (order by bgroup desc, bstep asc) as prev_bno from board) 
+		where bno= #{bno}
+		)
   </select>
   
   <!--  조회수 증가  -->
@@ -35,7 +72,19 @@
   
   <!-- 게시글 수정 -->
   <update id="boardmodify">
-  	update board set btitle = #{btitle}, id = #{id}, bcontent = #{bcontent} where bno = #{bno}
+  	update board set btitle = #{btitle}, id = #{id}, bcontent = #{bcontent}, bdate=sysdate where bno = #{bno}
   </update>
+  
+  <!--  답변달기 - 자식게시글 bstep 1++  -->
+  <update id="bstepUp">
+  	update board set bstep = bstep+1 where bgroup=#{bgroup} and bstep>#{bstep}
+  </update>
+  
+  <!--  답변달기 - 답변 저장 -->
+  <insert id="InsertBreply">
+  	insert into board values(
+  	board_seq.nextval, #{btitle}, #{bcontent},#{id},#{bgroup},#{bstep}+1,#{bindent}+1,0,sysdate
+  	)
+  </insert>
   
 </mapper>

@@ -13,10 +13,10 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/read.css">
   <script>
-  	const deleteBtn = () => {
+  	const deleteBtn = (bno) => {
   		if(confirm("게시글을 삭제하시겠습니까?")){
   			alert("게시글이 삭제되었습니다.")
-  			location.href="/board/bdelete?bno=${list.bno}";
+  			location.href="/board/bdelete?bno=${list.bno}&page=${page}";
   		}
   	}
   	
@@ -53,17 +53,31 @@
         <td colspan="3" class="article">${list.bcontent }</td>
       </tr>
       <tr>
-        <td colspan="3"><strong>다음글</strong> <span class="separator">|</span> [키즈잼] 2월 프로그램 안내</td>
+        <td colspan="3"><strong>다음글</strong> <span class="separator">|</span>
+        <c:if test="${ndto.bno  != null }">
+        <a href="/board/bview?bno=${ndto.bno }">${ndto.btitle }</a>
+        </c:if>
+        <c:if test="${ndto.bno  == null }">
+        <a >다음글이 없습니다.</a>
+        </c:if>
+        </td>
       </tr>
       <tr>
-        <td colspan="3"><strong>이전글</strong> <span class="separator">|</span> [키즈잼] 2020년 1분기 정기 휴관일 안내</td>
+        <td colspan="3"><strong>이전글</strong> <span class="separator">|</span>
+        <c:if test="${pdto.bno  != null }"> 
+        <a href="/board/bview?bno=${pdto.bno }">${pdto.btitle }</a>
+        </c:if>
+        <c:if test="${pdto.bno  == null }"> 
+        <a>이전글이 없습니다.</a>
+        </c:if>
+        </td>
       </tr>
     </table>
 
-    <a href="blist"><div class="list">목록</div></a>
-    <a onclick="deleteBtn()"><div class="list">삭제</div></a>
+    <a href="/board/blist?page=${page }"><div class="list">목록</div></a>
+    <a onclick="deleteBtn(${list.bno}, ${page })"><div class="list">삭제</div></a>
     <a onclick="modifyBtn()"><div class="list">수정</div></a>
-    <a href=""><div class="list">답변달기</div></a>
+    <a href="/board/breply?bno=${list.bno }&page=${page}"><div class="list">답변달기</div></a>
   </section>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.java.controller;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,12 +21,19 @@ public class BoardController {
 	@Autowired BoardService boardService;
 	@Autowired HttpServletRequest request;
 	
-	// 게시글 전체보기
+	// 게시글 전체보기 + 검색
 	// 받을 곳 = 받기 위한 호출
 	@GetMapping("/board/blist")
-	public String blist(Model model) {
-		ArrayList<BoardDto> list = boardService.blist();
-		model.addAttribute("list", list);
+	public String blist(@RequestParam(value="page", defaultValue="1") int page,
+			String category, String searchW, Model model) {
+		Map<String, Object> map = boardService.blist(page, category, searchW);
+		model.addAttribute("list", map.get("list"));
+		model.addAttribute("page", map.get("page"));
+		model.addAttribute("category", map.get("category"));
+		model.addAttribute("searchW", map.get("searchW"));
+		model.addAttribute("maxPage", map.get("maxPage"));
+		model.addAttribute("endpage", map.get("endpage"));
+		model.addAttribute("startpage", map.get("startpage"));
 		return "blist";
 	}
 	
@@ -46,41 +54,56 @@ public class BoardController {
 	
 	// 글보기 페이지 열기
 	@GetMapping("/board/bview")
-	public String bview(@RequestParam(defaultValue = "1") int bno, Model model) {
+	public String bview(@RequestParam(defaultValue = "1") int bno, int page, Model model) {
 		// 1개의 게시글 가져오기
 		// 주소에서 가지고 오는 값은 모두 string / int로 형변환을 해주면서 디폴트값 1로 설정
-		BoardDto boardDto = boardService.bview(bno);
-		model.addAttribute("list",boardDto);
+		Map<String, Object> map = boardService.bview(bno);
+		model.addAttribute("list",map.get("boardDto"));
+		model.addAttribute("pdto",map.get("prevDto"));
+		model.addAttribute("ndto",map.get("nextDto"));
+		 model.addAttribute("page", page);
 		
 		return "bview";
 	}
 	
 	// 게시글 삭제
 	@GetMapping("/board/bdelete")
-	public String bdelete(int bno) {
-		// 1개의 게시글 가져오기
-		// 주소에서 가지고 오는 값은 모두 string / int로 형변환을 해주면서 디폴트값 1로 설정
+	public String bdelete(int bno, int page) {
 		boardService.bdelete(bno);
-		return "redirect:/board/blist";
+		return "redirect:/board/blist?page="+page;
 	}
 	
 	// 게시글 수정창 열림
 	@GetMapping("/board/bmodify")
-	public String bmodify(int bno, Model model) {
-		// 1개의 게시글 가져오기
-		// 주소에서 가지고 오는 값은 모두 string / int로 형변환을 해주면서 디폴트값 1로 설정
-		//boardService.bmodify(bno);
-		BoardDto boardDto = boardService.bview(bno);
+	public String bmodify(int bno, int page, Model model) {
+		BoardDto boardDto = boardService.bmodify(bno);
 		model.addAttribute("list",boardDto);
-		return "redirect:/board/bmodify?bno={bno}";
+		model.addAttribute("page",page);
+		return "bmodify";
 	}
 	
 	// 게시글 수정 전송
 	@PostMapping("/board/bmodify")
-	public String bmodify(BoardDto modib) {
-		String bno = request.getParameter("bno");
-		// boardService.bmodify(modib, bno);
-		return "redirect:/board/blist";
+	public String bmodify(BoardDto modib, int page) {
+		System.out.println("넘어오나"+modib.getBtitle());
+		System.out.println("넘어오나"+modib.getBno());
+		boardService.bmodify(modib);
+		return "redirect:/board/blist?page="+page;
+	}
+	
+	// 답변달기 페이지
+	@GetMapping("/board/breply")
+	public String breply(int bno, int page, Model model) {
+		BoardDto boardDto = boardService.breply(bno);
+		model.addAttribute("bdto",boardDto);
+		return "breply";
+	}
+	
+	// 답변달기 전송
+	@PostMapping("/board/breply")
+	public String breply(BoardDto bdto, int page) {
+		boardService.breply(bdto);
+		return "redirect:/board/blist?page="+page;
 	}
 
 }

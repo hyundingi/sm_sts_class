@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 마이바티스 사용하겠다. -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- dao interface 파일 위치 -->
+<mapper namespace="com.java.dao.BoardDao">
+  <select id="selectAll" resultType="com.java.dto.BoardDto">
+      select * from board 
+      <if test="category == 'btitle' or category == 'bcontent'" >
+      	where ${category} like '%'||#{searchW}||'%'
+      </if>
+      <if test="category == 'all'">
+      	where btitle like '%'||#{searchW}||'%' or bcontent like '%'||#{searchW}||'%'
+      </if>
+      order by bgroup desc, bstep asc
+  </select>
+</mapper>

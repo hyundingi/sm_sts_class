@@ -13,39 +13,46 @@
 	rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="../css/write.css">
-</head>
 <script>
- const updateBtn = () => {
-	 alert(" 게시글을 수정합니다. ");
-	 modify.submit();
- }
-</script>
+  const replyBtn = () => {
+	  alert("답변달기를 저장합니다.")
+	  breplyFrm.submit();
+  }
+  </script>
+</head>
 <body>
 	<section>
 		<h1>게시글수정</h1>
 		<hr>
 
-		<form action="bmodify" name="modify" method="post">
+		<form action="breply" name="breplyFrm" method="post">
 			<table>
-				<input type="hidden" name="bno" value="${list.bno}">
+				<input type="hidden" name="bno" value="${ bdto.bno}">
+				<input type="hidden" name="bgroup" value="${ bdto.bgroup}">
+				<input type="hidden" name="bstep" value="${ bdto.bstep}">
+				<input type="hidden" name="bindent" value="${ bdto.bindent}">
 				<colgroup>
 					<col width="15%">
 					<col width="85%">
 				</colgroup>
 				<tr>
 					<th>작성자</th>
-					<td><input type="text" name="id" value="${list.id }" readonly>
+					<td><input type="text" name="id" value="${bdto.id }">
 					</td>
 				</tr>
 				<tr>
 					<th>제목</th>
-					<td><input type="text" name="btitle" value="${list.btitle }">
-					</td>
+					<td><input type="text" name="btitle"
+						value="<답변> ${bdto.btitle}"></td>
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea name="bcontent" cols="50" rows="10">${list.bcontent }
-            </textarea></td>
+					<td><textarea name="bcontent" cols="50" rows="10">
+
+---------------------------
+[답글]
+${bdto.bcontent }
+</textarea></td>
 				</tr>
 				<tr>
 					<th>이미지 표시</th>
@@ -54,9 +61,9 @@
 			</table>
 			<hr>
 			<div class="button-wrapper">
-				<button type="button" onclick="updateBtn()" class="write">수정완료</button>
+				<button type="button" onclick="replyBtn()" class="write">답변완료</button>
 				<button type="button" class="cancel"
-					onclick="javascript:location.href='blist'">취소</button>
+					onclick="javascript:location.href='/board/blist'">취소</button>
 			</div>
 		</form>
 
