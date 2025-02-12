@@ -1,5 +1,6 @@
 package com.java.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -9,10 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.java.dto.BoardDto;
 import com.java.service.BoardService;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -46,7 +50,20 @@ public class BoardController {
 	// 글쓰기 전송
 	// 받을게 없기 때문에 호출에 보낼거를 담아 보냄
 	@PostMapping("/board/bwrite")
-	public String bwrite(BoardDto bdto) {
+	public String bwrite(BoardDto bdto, @RequestPart MultipartFile files) throws Exception{
+		bdto.setBfile("");
+		if(!files.isEmpty()) {
+			String origin = files.getOriginalFilename();
+			long time = System.currentTimeMillis();
+			String realFileName = String.format("%d_%s", time, origin);
+			String url = "c:/upload/board/";
+			File f = new File(url+realFileName);
+			files.transferTo(f);
+			bdto.setBfile(realFileName);
+			
+		}
+		
+		
 		boardService.bwrite(bdto);
 		System.out.println("잘 받았음 " + bdto.getBtitle());
 		return "redirect:/?chkBwrite=1";
@@ -61,7 +78,7 @@ public class BoardController {
 		model.addAttribute("list",map.get("boardDto"));
 		model.addAttribute("pdto",map.get("prevDto"));
 		model.addAttribute("ndto",map.get("nextDto"));
-		 model.addAttribute("page", page);
+		model.addAttribute("page", page);
 		
 		return "bview";
 	}

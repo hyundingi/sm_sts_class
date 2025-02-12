@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 마이바티스 사용하겠다. -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- dao interface 파일 위치 -->
+<mapper namespace="com.java.dao.BoardDao">
+  <select id="selectAll" resultType="com.java.dto.BoardDto">
+      select * from board order by bgroup desc, bstep asc
+  </select>
+  
+  <select id="selectOne" resultType="com.java.dto.BoardDto">
+      select * from board where bno = #{bno}
+  </select>
+  
+  <insert id="insertBoard">
+  	insert into board values (board_seq.nextval, #{btitle},
+  	#{bcontent}, #{id}, board_seq.currval, 0,0,0,sysdate, #{bfile})
+  </insert>
+</mapper>

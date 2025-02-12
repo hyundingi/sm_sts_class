@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 마이바티스 사용하겠다. -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- dao interface 파일 위치 -->
+<mapper namespace="com.java.dao.CustomerDao">
+<!-- 게시글 전체 가져오기 -->
+  <select id="selectAll" resultType="com.java.dto.BoardDto">
+      select * from board 
+      <if test="category == title">
+      where btitle like '%'||#{searchW}||'%' 
+      </if>
+      order by bgroup desc, bstep asc
+  </select>
+  
+<!-- 게시글 하나 가져오기 -->
+  <select id="selectOne" resultType="com.java.dto.BoardDto">
+      select * from board where bno=#{bno}
+  </select>
+  
+<!-- 이전 게시글 가져오기 -->
+  <select id="selectPrev" resultType="com.java.dto.BoardDto">
+      select * from board where bno= (
+	select prev_bno from
+	(select bno,lead(bno,1,-1) over(order by bgroup desc, bstep asc) as prev_bno from board)
+	where bno = #{bno})
+  </select>
+  
+<!-- 이전 게시글 가져오기 -->
+  <select id="selectNext" resultType="com.java.dto.BoardDto">
+      select * from board where bno= (
+	select prev_bno from
+	(select bno,lag(bno,1,-1) over(order by bgroup desc, bstep asc) as prev_bno from board)
+	where bno = #{bno})
+  </select>
+</mapper>

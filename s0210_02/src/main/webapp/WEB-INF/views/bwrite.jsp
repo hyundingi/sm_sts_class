@@ -25,6 +25,18 @@
 	  write.submit();
 		  
 	}
+  
+  const readUrl = (input) => {
+		if(input.files && input.files[0]){
+			var reader = new FileReader();
+			reader.onload = function(e){
+				document.getElementById("preview").src = e.target.result;
+			}
+			reader.readAsDataURL(input.files[0]);
+		}else{
+			document.getElementById("preview").src = "";
+		}
+	}
  
   </script>
 </head>
@@ -33,7 +45,7 @@
     <h1>관리자 글쓰기</h1>
     <hr>
 
-    <form action="bwrite" name="write" method="post">
+    <form action="bwrite" name="write" method="post" enctype="multipart/form-data">
       <table>
         <colgroup>
           <col width="15%">
@@ -60,7 +72,16 @@
         <tr>
           <th>이미지 표시</th>
           <td>
-            <input type="file" name="file" id="file">
+            <input type="file" name="files" id="file" onchange="readUrl(this)">
+          </td>
+        </tr>
+        <script>
+        	
+        </script>
+        <tr>
+          <th>이미지 보기</th>
+          <td>
+          	<img alt="" id="preview" style="width:100px">
           </td>
         </tr>
       </table>
