@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +21,7 @@
 <script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="../js/idangerous.swiper-2.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery.anchor.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="../js/html5.js"></script>
 <script type="text/javascript" src="../js/respond.min.js"></script>
@@ -211,125 +215,86 @@ $(document).ready(function() {
 					
 					<div class="productTab normaltab">
 						<ul>
-							<li><a href="#" class="on">포토 구매후기</a></li>
-							<li class="last"><a href="#">상품평</a></li>
+							<li><a href="#">포토 구매후기</a></li>
+							<li class="last"><a href="#" class="on">상품평</a></li>
 						</ul>						
 					</div>
+					<script>
+					$(function(){
+						$.ajax({
+							url:"/community/comment/api_data",
+							type:"post",
+							data:{},
+							dataType:"json",
+							success:function(data){
+								let apiArr = data.body.items
+								let hdata = "";
+								
+								for (let i=0;i<4;i++){
+									console.log("이름 : "+apiArr[i].item.title.org)
+									console.log("퍼블리셔 : "+apiArr[i].item.publisher.org)
+									hdata += `
+										<tr>
+										<td class="tnone">1</td>
+										<td>`+apiArr[i].item.title.org+`</td>
+										<td class="left">
+											<a href="#">
+												<span class="orange">[먹어봤어요]</span> 쟈뎅, 테이크아웃 카페모리...
+												<img src="../images/ico/ico_new.gif" alt="new" />
+											</a>
+										</td>
+										<td>slseifh***</td>
+										<td class="tnone">
+											<img src="../images/ico/ico_star.gif" alt="별점" />
+											<img src="../images/ico/ico_star.gif" alt="별점" />
+											<img src="../images/ico/ico_star.gif" alt="별점" />
+											<img src="../images/ico/ico_star.gif" alt="별점" />
+											<img src="../images/ico/ico_star.gif" alt="별점" />
+
+											<br/>14-01-28
+										</td>
+										<td class="right tnone">9999</td>
+									</tr>`;
+								}
+								$(".apiType").html(hdata);
+							},
+							error:function(){
+								alert("실패")
+							}
+						}); //ajax
+					}); // jquery
 					
+					</script>
 
-					<!-- 포토 구매후기 -->
-					<div class="imgListType">
-						<ul>
 
-							<!-- List -->
-							<li>
-								<div class="img"><img src="../images/img/sample_epil.jpg" width="155" height="160" alt="" /></div>
-								<div class="txt">
-									<div class="subject">
-										<a href="#"><span class="orange">[먹어봤어요]</span> 쟈뎅, 테이크아웃 카페모리 구매후기</a>
-									</div>
-									<div class="conf">
-										소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.....
-									</div>
-									<div class="data">
-										<p>작성자 <span>dlsif***</span></p>
-										<p>등록일 <span>2014-03-24</span></p>
-										<p>조회수 <span>325</span></p>
-										<p>평점 
-											<span class="ty">
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-											</span>
-										</p>
-									</div>
-								</div>
-							</li>
-							<!-- //List -->
+					<!-- 상품평 -->
+					<div class="orderDiv">
+					<table summary="상품평 게시판으로 NO, 제품명, 제목, 작성자, 평점/등록일, 조회수 순으로 조회 하실수 있습니다." class="orderTable" border="1" cellspacing="0">
+						<caption>주문 제품 확인</caption>
+						<colgroup>
+						<col width="8%" class="tnone" />
+						<col width="12%" class="tw20" />
+						<col width="*" />
+						<col width="14%" class="tw20" />
+						<col width="14%" class="tnone" />
+						<col width="10%" class="tnone" />
+						</colgroup>
+						<thead>
+							<th scope="col" class="tnone">NO.</th>
+							<th scope="col">제품명</th>
+							<th scope="col">제목</th>
+							<th scope="col">작성자</th>
+							<th scope="col" class="tnone">평점/등록일</th>
+							<th scope="col" class="tnone">조회수</th>
+						</thead>
+						<tbody class="apiType">
+							
 
-							<li>
-								<div class="img"><img src="../images/img/sample_epil.jpg" width="155" height="160" alt="" /></div>
-								<div class="txt">
-									<div class="subject">
-										<a href="#"><span class="orange">[먹어봤어요]</span> 쟈뎅, 테이크아웃 카페모리 구매후기</a>
-									</div>
-									<div class="conf">
-										소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.....
-									</div>
-									<div class="data">
-										<p>작성자 <span>dlsif***</span></p>
-										<p>등록일 <span>2014-03-24</span></p>
-										<p>조회수 <span>325</span></p>
-										<p>평점 
-											<span>
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-											</span>
-										</p>
-									</div>
-								</div>
-							</li>
-
-							<li>
-								<div class="img"><img src="../images/img/sample_epil.jpg" width="155" height="160" alt="" /></div>
-								<div class="txt">
-									<div class="subject">
-										<a href="#"><span class="orange">[먹어봤어요]</span> 쟈뎅, 테이크아웃 카페모리 구매후기</a>
-									</div>
-									<div class="conf">
-										소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.....
-									</div>
-									<div class="data">
-										<p>작성자 <span>dlsif***</span></p>
-										<p>등록일 <span>2014-03-24</span></p>
-										<p>조회수 <span>325</span></p>
-										<p>평점 
-											<span>
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-											</span>
-										</p>
-									</div>
-								</div>
-							</li>
-
-							<li>
-								<div class="img"><img src="../images/img/sample_epil.jpg" width="155" height="160" alt="" /></div>
-								<div class="txt">
-									<div class="subject">
-										<a href="#"><span class="orange">[먹어봤어요]</span> 쟈뎅, 테이크아웃 카페모리 구매후기</a>
-									</div>
-									<div class="conf">
-										소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.소문만큼 맛있었습니다.....
-									</div>
-									<div class="data">
-										<p>작성자 <span>dlsif***</span></p>
-										<p>등록일 <span>2014-03-24</span></p>
-										<p>조회수 <span>325</span></p>
-										<p>평점 
-											<span>
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-												<img src="../images/ico/ico_star.gif" alt="별점" />
-											</span>
-										</p>
-									</div>
-								</div>
-							</li>
-
-						</ul>
+							
+						
+						</tbody>
+					</table>
 					</div>
-
 
 					<div class="btnAreaList">
 						<div class="bwright">
@@ -368,8 +333,7 @@ $(document).ready(function() {
 							</ul>
 						</div>
 					</div>
-					<!-- //포토 구매후기 -->
-
+					<!-- //상품평 -->
 
 				</div>
 			</div>

@@ -20,6 +20,7 @@
 <script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="../js/idangerous.swiper-2.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery.anchor.js"></script>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="../js/html5.js"></script>
 <script type="text/javascript" src="../js/respond.min.js"></script>
@@ -146,6 +147,15 @@ $(document).ready(function() {
 		$("#ieUser").hide();
         clearTimeout(msietimer);
      }
+     
+   //로그인 여부
+     if("${param.loginChk}"=="1"){
+     	alert("로그인이 되었습니다.");
+     }
+     //로그아웃 여부
+     if("${param.loginChk}"=="0"){
+     	alert("로그아웃 되었습니다.");
+     }
 </script>
 
 <div id="allwrap">
@@ -161,13 +171,19 @@ $(document).ready(function() {
 				<ul>
 					<li><a href="/event/event">EVENT</a></li>
 					<li><a href="/customer/notice">CUSTOMER</a></li>
-					<li><a href="#">COMMUNITY</a></li>
+					<li><a href="/community/epilogue">COMMUNITY</a></li>
 				</ul>
 			</div>
 			<div id="snb">
 				<ul>
-					<li><a href="#">LOGIN</a></li>
-					<li><a href="#">JOIN</a></li>
+					<c:if test="${session_id == null }">
+						<li><a href="/member/login">LOGIN</a></li>
+						<li><a href="/member/step01">JOIN</a></li>
+					</c:if>
+					<c:if test="${session_id != null }">
+						<li>${session_id} 님</li>
+						<li><a href="/member/logout">LOGOUT</a></li>
+					</c:if>
 					<li><a href="#">MY PAGE</a></li>
 					<li><a href="#">CART</a></li>
 				</ul>

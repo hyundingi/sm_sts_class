@@ -1,3 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,16 +24,23 @@
 <script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="../js/idangerous.swiper-2.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery.anchor.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="../js/html5.js"></script>
 <script type="text/javascript" src="../js/respond.min.js"></script>
 <![endif]-->
+
 <script type="text/javascript">
-$(document).ready(function() {
-	
-
-
+$(function() {
+	$(".sbtn").click(function(){
+		  loginFrm.submit();
+	  })
 });
+
+//로그인 여부
+if("${loginChk}"=="0"){
+	alert("아이디 또는 패스워드가 일치하지 않습니다. 다시 로그인해주세요.");
+}
 </script>
 </head>
 <body>
@@ -189,7 +202,7 @@ $(document).ready(function() {
 			<ol>
 				<li><a href="#">HOME</a></li>
 				<li><a href="#">MEMBERSHIP</a></li>
-				<li class="last">회원가입</li>
+				<li class="last">로그인</li>
 			</ol>
 		</div>
 		
@@ -204,54 +217,90 @@ $(document).ready(function() {
 					<li><a href="#" id="leftNavi5">개인정보<span>취급방침</span></a></li>
 					<li class="last"><a href="#" id="leftNavi6">이메일무단<span>수집거부</span></a></li>
 				</ul>			
-			</div><script type="text/javascript">initSubmenu(2,0);</script>
-
-
+			</div><script type="text/javascript">initSubmenu(1,0);</script>
+			
+			<script>
+			  $(function(){
+				
+				  //쿠키 읽기
+				  console.log("전체 : "+document.cookie);
+				  let c_id = "cook_id";	
+				  const cookies = document.cookie.split('; '); 
+				  console.log(cookies);
+				  for (let cookie of cookies) { 
+					  let [k, v] = cookie.split('=');
+					  // 찾고자 하는 쿠키가 있는지 확인
+					  if (k === c_id) {
+					   console.log(v); 
+					   $("input[name='id']").val(v);
+					   $("input[name='id']").focus();
+			           $("#idsave").attr("checked" , true);
+					  }
+				  }
+				  
+				 $("#idsave").change(function(){
+					if($("#idsave").is(":checked")){
+						alert("체크됨");
+						let cdata = $("input[name='id']").val();
+						console.log(cdata);
+						//쿠키저장						
+						const date = new Date();
+						date.setTime(date.getTime() + (60 * 60 * 1000)); // 1시간 후
+						document.cookie = `cook_id=`+cdata+`; expires=`+date.toUTCString()+`; path=/`;
+						console.log(document.cookie);
+					}else{
+						alert("체크해제");
+						//쿠키삭제
+						document.cookie = `cook_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+						$("input[name='id']").val('');
+						console.log("쿠키삭제");
+						console.log(document.cookie);
+						
+					} 
+				 });
+			  });
+			</script>
 			<!-- contents -->
 			<div id="contents">
 				<div id="member">
-					<h2><strong>회원가입</strong><span>회원으로 가입하시면 보다 더 다양한 혜택을 누리실 수 있습니다.</span></h2>
-					
-					<!-- STEP -->
-					<div class="stepWrap">
-						<div class="step stepon">
-							<p class="web">STEP 01</p>
-							<p class="txt">실명확인</p>
-							<p class="ck"><img src="../images/bg/bg_step.png" alt="현재위치" /></p>
-						</div>
+					<h2><strong>로그인</strong><span>로그인 후 주문하시면 다양한 혜택을 받으실 수 있습니다.</span></h2>
+					<h3>회원 로그인</h3>
+					<div class="informbox">
+						<div class="inform">
+							<form action="/member/login" name="loginFrm" method="post">
+							<ul>
+								<li><input type="text" name="id" class="loginType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='loginType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" /></li>
+								<li><input type="password" name="pw" class="passType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='passType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" /></li>
+							</ul>
 
-						<div class="step">
-							<p class="web">STEP 02</p>
-							<p class="txt">약관 동의</p>
-						</div>
+							<div class="btn"><a class="sbtn">로그인</a></div>
+							<div class="chk"><input type="checkbox" id="idsave" name="idsave" value="1"/><label for="idsave">아이디 저장</label></div>							
+							</form>
 
-						<div class="step">
-							<p class="web">STEP 03</p>
-							<p class="txt"><span>회원정보</span> <span>입력</span></p>
-						</div>
-
-						<div class="step">
-							<p class="web">STEP 04</p>
-							<p class="txt"><span>회원가입</span> <span>완료</span></p>
+							<div class="point">
+								<p>아이디와 비밀번호를 잊으셨나요?</p>
+								<a href="#" class="nbtn">아이디/비밀번호 찾기</a>
+							</div>
 						</div>
 					</div>
-					<!-- //STEP -->
-						
 
-					<div class="alertBox">
-						<ul>
-							<li>회원님의 실명확인 및 가입 여부를 확인하는 절차입니다.</li>
-							<li>회원님의 개인 정보 보호를 위해 실명확인을 실시하고 있습니다.</li>
-						</ul>
+
+
+					<h3>비회원 주문 조회</h3>
+					<div class="informbox">
+						<div class="inform">
+							<ul>
+								<li><input type="text" class="ordererType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='ordererType'}else {this.className='mfocusnot'}" /></li>
+								<li><input type="text" class="ordernumType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='ordernumType'}else {this.className='mfocusnot'}" /></li>
+							</ul>
+
+							<div class="btn"><a href="#" class="gbtn">조회하기</a></div>
+							<div class="point">
+								<p>아직 JARDIN 회원이 아니신가요? <span>회원가입하시고 다양한 혜택을 받으세요.</span></p>
+								<a href="#" class="nbtn">회원가입</a>
+							</div>
+						</div>
 					</div>
-
-
-					<!-- Btn Area -->
-					<div class="btnAreaCenter">
-						<a href="#" class="gbtn">휴대폰인증</a></li>
-					</div>
-					<!-- //Btn Area -->
-
 
 				</div>
 			</div>

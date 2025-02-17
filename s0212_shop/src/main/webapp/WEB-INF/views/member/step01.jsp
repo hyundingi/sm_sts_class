@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +21,7 @@
 <script type="text/javascript" src="../js/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="../js/idangerous.swiper-2.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery.anchor.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="../js/html5.js"></script>
 <script type="text/javascript" src="../js/respond.min.js"></script>
@@ -189,7 +193,7 @@ $(document).ready(function() {
 			<ol>
 				<li><a href="#">HOME</a></li>
 				<li><a href="#">MEMBERSHIP</a></li>
-				<li class="last">로그인</li>
+				<li class="last">회원가입</li>
 			</ol>
 		</div>
 		
@@ -204,48 +208,114 @@ $(document).ready(function() {
 					<li><a href="#" id="leftNavi5">개인정보<span>취급방침</span></a></li>
 					<li class="last"><a href="#" id="leftNavi6">이메일무단<span>수집거부</span></a></li>
 				</ul>			
-			</div><script type="text/javascript">initSubmenu(1,0);</script>
+			</div><script type="text/javascript">initSubmenu(2,0);</script>
 
 
 			<!-- contents -->
 			<div id="contents">
 				<div id="member">
-					<h2><strong>로그인</strong><span>로그인 후 주문하시면 다양한 혜택을 받으실 수 있습니다.</span></h2>
-					<h3>회원 로그인</h3>
-					<div class="informbox">
-						<div class="inform">
-							<ul>
-								<li><input type="text" class="loginType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='loginType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" /></li>
-								<li><input type="password" class="passType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='passType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" /></li>
-							</ul>
+					<h2><strong>회원가입</strong><span>회원으로 가입하시면 보다 더 다양한 혜택을 누리실 수 있습니다.</span></h2>
+					
+					<!-- STEP -->
+					<div class="stepWrap">
+						<div class="step stepon">
+							<p class="web">STEP 01</p>
+							<p class="txt">실명확인</p>
+							<p class="ck"><img src="../images/bg/bg_step.png" alt="현재위치" /></p>
+						</div>
 
-							<div class="btn"><a href="#" class="sbtn">로그인</a></div>
-							<div class="chk"><input type="checkbox" id="idsave"/><label for="idsave">아이디 저장</label></div>							
+						<div class="step">
+							<p class="web">STEP 02</p>
+							<p class="txt">약관 동의</p>
+						</div>
 
-							<div class="point">
-								<p>아이디와 비밀번호를 잊으셨나요?</p>
-								<a href="#" class="nbtn">아이디/비밀번호 찾기</a>
-							</div>
+						<div class="step">
+							<p class="web">STEP 03</p>
+							<p class="txt"><span>회원정보</span> <span>입력</span></p>
+						</div>
+
+						<div class="step">
+							<p class="web">STEP 04</p>
+							<p class="txt"><span>회원가입</span> <span>완료</span></p>
 						</div>
 					</div>
+					<!-- //STEP -->
+						
+
+					<div class="alertBox">
+						<ul>
+							<li>회원님의 실명확인 및 가입 여부를 확인하는 절차입니다.</li>
+							<li>회원님의 개인 정보 보호를 위해 실명확인을 실시하고 있습니다.</li>
+						</ul>
+					</div>
+					
+					<div class="checkDivTab">
+						<table summary="분류, 구매여부, 평가, 제목, 상세 내용 순으로 상품평을 작성 하실수 있습니다." class="checkTable" border="1" cellspacing="0">
+							<caption>상품평 작성</caption>
+							<colgroup>
+							<col width="25%" class="tw30" />
+							<col width="*" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row"><span>이메일 주소</span></th>
+									<td>
+										<input type="text" class="wlong" name="email"/>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><span>인증코드</span></th>
+									<td>
+										<input type="text" class="wlong" readonly/>
+									</td>
+								</tr>
+															
+							</tbody>
+						</table>
+					</div>
+					
+					<script>
+						$(function(){
+							$(".nbtnbig").click(() => {
+								let email = $('input[name="email"]');
+								console.log(email.val())
+								
+								if(email.val().length<1){
+									alert("이메일을 입력해주세요.")
+									email.focus();
+									return;
+								}
+								alert("인증코드를 이메일로 발송했습니다.")
+								//ajax 이메일 발송
+								$.ajax({
+									url:"/member/sendEmail",
+									type:"post",
+									data:{"email":email.val()},
+									success:function(data){
+										alert("성공")
+										console.log(data)
+									},
+									error:function(){
+										alert("이메일 발송 실패")
+									}
+								}); // ajax
+								
+							}); //click
+						}); //jquery
+					</script>
 
 
-
-					<h3>비회원 주문 조회</h3>
-					<div class="informbox">
-						<div class="inform">
+					<!-- Btn Area -->
+					<div class="btnArea">
+						<div class="bCenter">
 							<ul>
-								<li><input type="text" class="ordererType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='ordererType'}else {this.className='mfocusnot'}" /></li>
-								<li><input type="text" class="ordernumType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='ordernumType'}else {this.className='mfocusnot'}" /></li>
+								<li><a class="nbtnbig">인증코드 발송</a></li>
+								<li><a class="sbtnMini">다음으로</a></li>
 							</ul>
-
-							<div class="btn"><a href="#" class="gbtn">조회하기</a></div>
-							<div class="point">
-								<p>아직 JARDIN 회원이 아니신가요? <span>회원가입하시고 다양한 혜택을 받으세요.</span></p>
-								<a href="#" class="nbtn">회원가입</a>
-							</div>
 						</div>
 					</div>
+					<!-- //Btn Area -->
+
 
 				</div>
 			</div>
