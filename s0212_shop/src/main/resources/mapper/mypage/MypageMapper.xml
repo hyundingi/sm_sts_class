@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 마이바티스 사용하겠다. -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- dao interface 파일 위치 -->
+<mapper namespace="com.java.dao.MemBoardDao">
+<!-- 게시글 전체 가져오기 -->
+  <select id="selectAll" resultMap="mbDtoMap">
+  	select * from member a, board b where a.id=b.id and a.id = 'aaa'
+  </select>
+  
+  <resultMap type="com.java.dto.MemBoardDto" id="mbDtoMap">
+  	<collection property="memberDto" resultMap="memberDtoMap"/>
+  	<collection property="boardDto" resultMap="boardDtoMap"/>
+  </resultMap>
+
+  <resultMap type="com.java.dto.MemberDto" id="memberDtoMap">
+  	<result column="id" property="id"/>
+  	<result column="pw" property="pw"/>
+  	<result column="name" property="name"/>
+  	<result column="phone" property="phone"/>
+  	<result column="gender" property="gender"/>
+  	<result column="hobby" property="hobby"/>
+  	<result column="mdate" property="mdate"/>
+  </resultMap>
+  
+  <!--  boardDto  설정 -->
+  <resultMap type="com.java.dto.BoardDto" id="boardDtoMap">
+  	<result column="bno" property="bno"/>
+  	<result column="btitle" property="btitle"/>
+  	<result column="bcontent" property="bcontent"/>
+  	<result column="id" property="id"/>
+  	<result column="bgroup" property="bgroup"/>
+  	<result column="bstep" property="bstep"/>
+  	<result column="bindent" property="bindent"/>
+  	<result column="bhit" property="bhit"/>
+  	<result column="bdate" property="bdate"/>
+  	<result column="bfile" property="bfile"/>
+  </resultMap>
+</mapper>

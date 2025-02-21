@@ -31,9 +31,9 @@ public class MemberController {
 	public String login(HttpServletResponse response,
 			HttpServletRequest request) {
 		//쿠키생성
-		Cookie cookie = new Cookie("cook_id", "aaa");
-		cookie.setMaxAge(60*10);
-		response.addCookie(cookie);
+		//Cookie cookie = new Cookie("cook_id", "aaa");
+		//cookie.setMaxAge(60*10);
+		//response.addCookie(cookie);
 		return "member/login";
 	}
 	
@@ -55,14 +55,35 @@ public class MemberController {
 		return "member/step01";
 	}
 	
+	@GetMapping("/member/step02")
+	public String step02() {
+		//session.eo
+		return "member/step02";
+	}
+	
 	@ResponseBody // 이메일 발송
 	@PostMapping("/member/sendEmail")
-		public String sendEmail(String email) {
+		public String sendEmail(String email, Model model) {
 			System.out.println("sendEmail : "+email);
 			//String pwCode = memberService.sendEmail(email);
 			String pwCode = memberService.sendEmail2(email);
+			model.addAttribute("pwCode",pwCode);
 			return email;
 		}
+
+	@ResponseBody // 인증코드 확인
+	@PostMapping("/member/pwCodeChk")
+	public String pwCodeChk(String pwCode) {
+		System.out.println("pwcode : "+pwCode);
+		//String pwCode = memberService.sendEmail(email);
+		String pw = (String)session.getAttribute("pwCode");
+		if(pwCode.equals(pw)) {
+			return "1";
+		}else {
+			
+			return "0";
+		}
+	}
 	
 
 }

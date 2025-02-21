@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MemberDto {
+	
 
 	private String id;
 	private String pw;
