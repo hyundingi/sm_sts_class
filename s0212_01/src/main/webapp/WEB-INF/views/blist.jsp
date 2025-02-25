@@ -58,7 +58,7 @@
         <td class="table-title">
         <a href="/board/bview?bno=${bdto.bno }">${bdto.btitle }</a>
         </td>
-        <td>${bdto.id }</td>
+        <td>${bdto.id}</td>
         
         <td><fmt:formatDate value="${bdto.bdate }" pattern="yyyy-MM-dd"/></td>
         <td>${bdto.bhit }</td>
