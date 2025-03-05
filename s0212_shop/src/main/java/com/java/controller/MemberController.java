@@ -1,8 +1,11 @@
 package com.java.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,6 +87,38 @@ public class MemberController {
 			return "0";
 		}
 	}
+	
+	
+	// 회원 1명 가져오기
+		@CrossOrigin // 자바스크립트 접근 해제
+		@ResponseBody // 데이터로 받음
+		@GetMapping("/mlist2")
+		public List<MemberDto> mlist2(Model model) {
+			// 전체 회원리스트 
+			List<MemberDto> list = memberService.selectAll();
+			model.addAttribute("list",list);
+			return list;
+		}
+		
+		// 회원 1명 가져오기 
+		@CrossOrigin // 자바스크립트 접근 해제
+		@ResponseBody // 데이터로 받음
+		@GetMapping("/member/memberView")
+		public MemberDto memberView(String id) {
+			System.out.println("id : "+id);
+			MemberDto memberDto = memberService.memberView(id);
+			
+			return memberDto;
+		}
+		
+		// 회원 전체 가져오기 
+		@CrossOrigin // 자바스크립트 접근 해제
+		@ResponseBody // 데이터로 받음
+		@PostMapping("/member/memberList")
+		public List<MemberDto> memberList() {
+			List<MemberDto> list = memberService.memberList();
+			return list;
+		}
 	
 
 }

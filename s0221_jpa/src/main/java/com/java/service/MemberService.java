@@ -19,4 +19,6 @@ public interface MemberService {
 	// 로그인
 	MemberDto findByIdAndPw(String id, String pw);
 
+
+
 }
